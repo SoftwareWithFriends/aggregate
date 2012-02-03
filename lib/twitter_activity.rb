@@ -1,4 +1,5 @@
 require 'twitter'
+require_relative 'activity'
 
 module Aggregate
   module Twitter
@@ -9,6 +10,17 @@ module Aggregate
 
       def activity
         ::Twitter.user_timeline(@username)
+      end
+    end
+
+    class Normalizer
+
+      def initialize(activity)
+        @activity = activity
+      end
+
+      def to_aggregate
+        @activity.map { |a| Aggregate::Activity.new(a.text) }
       end
     end
   end
